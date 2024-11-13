@@ -4,11 +4,9 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Storage;
 
-class ParserService
+abstract class AbstractParser implements Parser
 {
-    const STORE_FILENAME = 'flats-list.json';
-    const DOCUMENT_URL = 'https://re.kufar.by/l/minsk/snyat/kvartiru-dolgosrochno/bez-posrednikov?cur=USD&oph=1&prc=r%3A250%2C400&size=30';
-    const TELEGRAM_URL = 'https://api.telegram.org/bot7543409418:AAHplcAYtcOBJjJi4Bnk9hMngM32di12BpQ/sendMessage?chat_id=-4576353735&parse_mode=HTML&text=';
+    private const TELEGRAM_URL = 'https://api.telegram.org/bot7543409418:AAHplcAYtcOBJjJi4Bnk9hMngM32di12BpQ/sendMessage?chat_id=-4576353735&parse_mode=HTML&text=';
 
     public function __construct()
     {
@@ -30,26 +28,31 @@ class ParserService
     private function loadUrlList(): array
     {
         $dom = new \DOMDocument();
-        $dom->loadHTML(file_get_contents(self::DOCUMENT_URL));
+        $dom->loadHTML(file_get_contents($this->getDocumentUrl()));
 
         $xpath = new \DOMXPath($dom);
-        $elements = $xpath->query('/html/body/div[1]/div[2]/div[1]/main/div/div/div[5]/div[1]/div[4]/div/section');
+        $elements = $xpath->query($this->getXpathQueryExpression());
 
         $data = [];
         foreach ($elements as $title) {
-            $data[] = explode('?rank', $title->getElementsByTagName('a')[0]->getAttribute('href'))[0];
+            $data[] = $this->getUrlPrefix() . explode('?', $title->getElementsByTagName('a')[0]->getAttribute('href'))[0];
         }
         return $data;
     }
 
+    protected function getUrlPrefix(): string
+    {
+        return '';
+    }
+
     private function getUrlsList(): ?array
     {
-        return json_decode(Storage::get(self::STORE_FILENAME));
+        return json_decode(Storage::get($this->getStoreFileName()));
     }
 
     private function storeUrlsList(array $data)
     {
-        Storage::put(self::STORE_FILENAME, json_encode($data));
+        Storage::put($this->getStoreFileName(), json_encode($data));
     }
 
     private function sendTelegramMessage(string $message)
@@ -65,4 +68,8 @@ class ParserService
             }
         }
     }
+
+    abstract protected function getStoreFileName(): string;
+    abstract protected function getDocumentUrl(): string;
+    abstract protected function getXpathQueryExpression(): string;
 }

@@ -1,8 +1,10 @@
 <?php
 
-use App\Services\ParserService;
+use App\Services\KParser;
+use App\Services\RParser;
 use Illuminate\Support\Facades\Artisan;
 
 Artisan::command('parse', function () {
-    (new ParserService())->run();
+    //(new KParser())->run();
+    (new RParser())->run();
 })->everyMinute();
