@@ -25,7 +25,7 @@ abstract class AbstractParser implements Parser
         $this->storeUrlsList($processed_list);
     }
 
-    private function loadUrlList(): array
+    protected function loadUrlList(): array
     {
         $dom = new \DOMDocument();
         $dom->loadHTML(file_get_contents($this->getDocumentUrl()));
