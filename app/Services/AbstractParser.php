@@ -19,7 +19,7 @@ abstract class AbstractParser implements Parser
         foreach ($this->loadUrlList() as $url) {
             if (!in_array($url, $processed_list)) {
                 $processed_list[] = $url;
-                //$this->sendTelegramMessage($url);
+                $this->sendTelegramMessage($url);
             }
         }
         $this->storeUrlsList($processed_list);
