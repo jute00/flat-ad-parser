@@ -27,7 +27,7 @@ class OParser extends AbstractParser
         $result = json_decode(curl_exec($curl));
 
         $data = [];
-        foreach ($result->apartments as $item) {
+        foreach ($result->apartments ?? [] as $item) {
             $data[] = $item->url;
         }
         return $data;
