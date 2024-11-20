@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Storage;
 
 abstract class AbstractParser implements Parser
 {
-    private const TELEGRAM_URL = 'https://api.telegram.org/bot7543409418:AAHplcAYtcOBJjJi4Bnk9hMngM32di12BpQ/sendMessage?chat_id=-4536343919&parse_mode=HTML&text=';
+    private const TELEGRAM_URL = 'https://api.telegram.org/bot7543409418:AAHplcAYtcOBJjJi4Bnk9hMngM32di12BpQ/sendMessage?chat_id=-4584794581&parse_mode=HTML&text=';
 
     public function __construct()
     {
